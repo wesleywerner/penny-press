@@ -33,21 +33,34 @@
   }
 
   function loadIssue (No) {
+    
+    // start printing this issue
 		vm.printing = true;
+    
+    // find the requested issue in the catalog
     vm.meta = vm.data.Issues.find(function (item) {
       return item.No == No;
       });
     if (vm.meta) {
+      
+      // ask for the issue article content list
       var issuepath = 'issues/'+ vm.meta.No +'/';
       fetchFile(issuepath +'content.json', function(data){
         vm.content = [ ];
         var content = JSON.parse(data);
+        
+        // print each article
         content.stories.forEach(function (storydata) {
           var storytext = fetchFile(issuepath + storydata.file, function(data){
             storydata.content = data
             vm.content.push(storydata);
           });
-				vm.printing = false;
+          
+        // we are done printing this issue
+        setTimeout(function() {
+          vm.printing = false;
+        }, 1000);
+        
         });
       });
     }
