@@ -1,0 +1,167 @@
+<!--
+   
+   Copyright 2016 wesley werner <wesley.werner@gmail.com>
+   
+   This program is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   any later version.
+   
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+   
+   You should have received a copy of the GNU General Public License
+   along with this program. If not, see http://www.gnu.org/licenses/.
+   
+-->
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+	<title>penny press</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+	<meta name="generator" content="Geany 1.24.1" />
+  <link rel="icon" type="image/png" href="images/favicon.png">
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/skeleton.css">
+  <link rel="stylesheet" href="css/penny.css">
+  
+  <style>
+
+    #editor {
+      margin: 0;
+      height: 100%;
+      color: #333;
+    }
+
+    textarea, #editor div {
+      display: inline-block;
+      width: 49%;
+      height: 100%;
+      vertical-align: top;
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+      padding: 0 20px;
+    }
+
+    textarea {
+      border: 2px solid gray;
+      resize: none;
+      outline: none;
+      background-color: #f6f6f6;
+      font-size: 14px;
+      font-family: 'Monaco', courier, monospace;
+      padding: 20px;
+    }
+
+    code {
+      color: #f66;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="mobile-notice" class="row">
+    <div class="twelve columns center">
+      You are reading the pamphlet print of Penny Press.
+    </div>
+  </div>
+
+  <div id="penny-app" class="container">
+
+    <h1 class="press-title">Penny Press</h1>
+    
+    <div id="issue-bar" class="row">
+      <div class="twelve columns">So you want to write some articles?</div>
+    </div>
+    
+    <p>Glad to hear it.</p>
+
+    <h1>Tips for writing articles</h1>
+    <ul>
+      <li>Write fun, entertaining or insightful words</li>
+      <li>The truth retold</li>
+      <li>Embellishment is always good</li>
+      <li>Spell check!</li>
+    </ul>
+    
+    <h1>Format</h1>
+    <p>Penny Press is palindrome of paraphernalia, mimicking old media within the new. We don't really want url's and links in our articles. The exception to this rule is placing adverts, which may have one link, if any.</p>
+    <p>Images are displayed grayscale to match our print. Don't worry doing this yourself, our CSS does it for you.</p>
+    
+    <h1>Articles</h1>
+    <p></p>
+    <ul>
+      <li>One article per person, per issue please</li>
+      <li>You can include one image in your article if you wish</li>
+      <li>No hard limit on the number of words.</li>
+    </ul>
+    
+    <h1>Adverts</h1>
+    <p>Penny Press does not print ads to monetize, they are purely informational, entertaining or made up. They exist to give readers the full press experience.</p>
+    <ul>
+      <li>Adverts can contain one web url, if necessary</li>
+      <li>They can have up to one image</li>
+      <li>25 words limit</li>
+      <li>You need one advert credit to print your ad</li>
+      <li>You get one advert credit for every <strong>published</strong> article you wrote</li>
+    </ul>
+    
+    <h1>Disclaimer</h1>
+    <p>The editor-in-chief reserves the right to deny articles that they think are inflammatory, discriminatory or in bad taste. Of course you <em>will</em> get a chance to fix your article. We really want your words, we just don't want trolls :)</p>
+    
+    <hr/>
+    
+    <h1>Article editor <small>and word counter</small></h1>
+    <div id="editor-app">
+      <div class="row">
+        <div class="two columns">letters: {{ letters }}</div>
+        <div class="two columns">words: {{ words }}</div>
+      </div>
+      <div id="editor">
+        <textarea v-model="input" debounce="300"></textarea>
+        <div v-html="input | marked"></div>
+      </div>
+    </div>
+    
+    <footer>
+      <div class="row">
+        <div class="column">Penny Press Newspaper Co</div>
+      </div>
+    </footer>
+
+  </div>
+
+  <script src="js/marked.min.js"></script>
+  <script src="js/vue.min.js"></script>
+  
+  <script>
+    new Vue({
+      el: '#editor-app',
+      data: {
+        input: '# my article'
+      },
+      filters: {
+        marked: marked
+      },
+      computed: {
+        letters: function () {
+          return this.input.length;
+        },
+        words: function () {
+          return this.input.split(' ').length;
+        },
+      }
+    })
+  </script>
+
+</body>
+
+</html>
