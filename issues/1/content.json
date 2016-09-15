@@ -1,0 +1,12 @@
+{
+  "stories": [
+    {
+      "type": "article",
+      "file": "hello.md"
+    },
+    {
+      "type": "advert",
+      "file": "world.md"
+    }
+  ]
+}
