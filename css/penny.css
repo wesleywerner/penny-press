@@ -77,8 +77,10 @@ blockquote p:after {
 
 /* default styles - article first */
 h1, h2, h3 {
-  font-size: 2em;
+  font-size: 1.1em;
   text-align: left;
+  font-weight: bold;
+  text-transform: uppercase;
 }
 
 .article {
@@ -138,6 +140,7 @@ footer {
   text-align: center;
   background-color: black;
   color: white;
+  margin-top: 30px;
 }
 
 footer a {
