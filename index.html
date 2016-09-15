@@ -30,6 +30,7 @@
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/skeleton.css">
   <link rel="stylesheet" href="css/penny.css">
+  <link rel="stylesheet" href="css/atebits.css">
 </head>
 
 <body>
@@ -44,13 +45,20 @@
 
     <h1 class="press-title">Penny Press</h1>
     
-    <div id="issue-bar" class="row">
+    <!--  v-show="printing" -->
+
+    <div class="center" v-show="printing">
+      <div class="atebits-loader"></div>
+			<p><h1 class="center">printing...</h1></p>
+    </div>
+
+    <div id="issue-bar" class="row" v-show="!printing">
       <div class="four columns">{{ meta.Date }}</div>
       <div class="four columns">Issue #{{ meta.No }}</div>
       <div class="four columns">{{ meta.Title }}</div>
     </div>
 
-    <div class="newspaper-layout">
+    <div class="newspaper-layout" v-show="!printing">
   
       <div v-for="story in content">
         <div v-html="story.content | marked" v-bind:class="[ story.type ]"></div>

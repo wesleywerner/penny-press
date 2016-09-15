@@ -2,11 +2,11 @@
   "stories": [
     {
       "type": "article",
-      "file": "hello.md"
+      "file": "penny-press-founded.md"
     },
     {
       "type": "advert",
-      "file": "world.md"
+      "file": "writers-wanted.md"
     }
   ]
 }

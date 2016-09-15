@@ -5,6 +5,7 @@
   var vm = new Vue({
     el: '#penny-app',
     data: {
+			printing: true,
       data: { },
       meta: { },
       content: [ ]
@@ -32,6 +33,7 @@
   }
 
   function loadIssue (No) {
+		vm.printing = true;
     vm.meta = vm.data.Issues.find(function (item) {
       return item.No == No;
       });
@@ -45,6 +47,7 @@
             storydata.content = data
             vm.content.push(storydata);
           });
+				vm.printing = false;
         });
       });
     }
