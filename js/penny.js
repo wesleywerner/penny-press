@@ -27,18 +27,22 @@
   window.vm = vm;
 
   function fetchFile(path, callback) {
-      var httpRequest = new XMLHttpRequest();
-      httpRequest.onreadystatechange = function() {
-          if (httpRequest.readyState === 4) {
-              if (httpRequest.status === 200) {
-                  //var data = JSON.parse(httpRequest.responseText);
-                  //if (callback) callback(data);
-                  if (callback) callback(httpRequest.responseText);
-              }
-          }
-      };
-      httpRequest.open('GET', path);
-      httpRequest.send(); 
+    var httpRequest = new XMLHttpRequest();
+    httpRequest.onreadystatechange = function() {
+      if (httpRequest.readyState === 4) {
+        if (httpRequest.status === 200) {
+          if (callback) callback(httpRequest.responseText);
+        }
+        else {
+          // something went wrong
+          vm.errormessage = httpRequest.statusText +': '+ httpRequest.responseURL;
+          vm.view = 'error';
+          vm.printing = false;
+        }
+      }
+    };
+    httpRequest.open('GET', path);
+    httpRequest.send(); 
   }
 
   function loadIssue (No) {
