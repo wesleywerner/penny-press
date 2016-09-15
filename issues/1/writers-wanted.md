@@ -1,2 +1,7 @@
-hungry? need a burger? we deliver!
-# 555-0000
+Can you write?
+
+Do you like waffles?
+
+Your story could be printed!
+
+[find out more](join.html)
