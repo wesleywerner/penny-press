@@ -5,10 +5,18 @@
   var vm = new Vue({
     el: '#penny-app',
     data: {
+      view: 'read',
 			printing: true,
+      printingtext: 'printing',
       data: { },
       meta: { },
       content: [ ]
+    },
+    methods: {
+      loadIssue: function (id) {
+        loadIssue (vm.data.Issues[id].No);
+        vm.view = 'read';
+      }
     },
     filters: {
       marked: marked

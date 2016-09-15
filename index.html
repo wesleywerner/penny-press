@@ -48,24 +48,65 @@
     <!-- printing sign -->
     <div class="center" v-show="printing">
       <div class="atebits-loader"></div>
-			<p><h1 class="center">printing...</h1></p>
+			<p><h1 class="center">{{ printingtext }}...</h1></p>
     </div>
 
     <!-- issue details -->
-    <div id="issue-bar" class="row" v-show="!printing">
+    <div id="issue-bar" class="row" v-show="!printing && view == 'read'">
       <div class="four columns">{{ meta.Date }}</div>
       <div class="four columns">Issue #{{ meta.No }}</div>
       <div class="four columns">{{ meta.Title }}</div>
     </div>
 
     <!-- issue content -->
-    <div class="newspaper-layout" v-show="!printing">
+    <div class="newspaper-layout" v-show="!printing && view == 'read'">
       <div v-for="story in content">
         <div v-html="story.content | marked" v-bind:class="[ story.type ]"></div>
       </div>
-    </div>  <!-- /newspaper-layout -->
+    </div>
+    
+    <!-- issuelist heading -->
+    <div id="issue-bar" class="row" v-show="!printing && view == 'issuelist'">
+      <div class="twelve columns">Order back issues of Penny Press</div>
+    </div>
 
-    <footer v-show="!printing">BIG FOOTER</footer>
+    <!-- issuelist list -->
+    <div v-show="!printing && view == 'issuelist'">
+      <table class="issue-table u-full-width">
+        <thead>
+          <tr>
+            <th>Issue</th>
+            <th>Date</th>
+            <th>Edition</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="issue in data.Issues" v-on:click="loadIssue($index)">
+            <td>{{ issue.No }}</td>
+            <td>{{ issue.Date }}</td>
+            <td>{{ issue.Title }}</td>
+          </tr>
+        </tbody>
+      </table>
+<!--
+      <ul>
+        <li v-for="issue in data.Issues">
+          <a href="#" v-on:click="loadIssue($index)">Issue #{{ issue.No }}, {{ issue.Date }} - {{ issue.Title }}</a>
+        </li>
+      </ul>
+-->
+    </div>
+
+    <footer v-show="!printing">
+      <div class="row">
+        <div class="column">Penny Press Newspaper Co</div>
+      </div>
+      <div class="row">
+        <div class="column">
+          <a href="#" v-on:click="view = 'issuelist'">Back Order</a>
+        </div>
+      </div>
+    </footer>
 
   </div>	<!-- /penny-app -->
 
