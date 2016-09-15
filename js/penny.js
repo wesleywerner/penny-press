@@ -8,6 +8,7 @@
       view: 'read',
 			printing: true,
       printingtext: 'printing',
+      errormessage: '',
       data: { },
       meta: { },
       content: [ ]
@@ -49,7 +50,11 @@
     vm.meta = vm.data.Issues.find(function (item) {
       return item.No == No;
       });
+    
     if (vm.meta) {
+      
+      // set url hash to provide a permalink
+      window.location.hash = No;
       
       // ask for the issue article content list
       var issuepath = 'issues/'+ vm.meta.No +'/';
@@ -72,6 +77,13 @@
         });
       });
     }
+    else {
+      // that issue is not in our list
+      vm.printing = false;
+      vm.view = 'error';
+      vm.errormessage = 'Issue no '+ No +' does not exist. Are you from the future?';
+    }
+    
   }
 
   // set markdown options
@@ -89,9 +101,12 @@
   // load catalog of issues
   fetchFile('issues/catalog.json', function(data){
       vm.data = JSON.parse(data);
-      // view latest
+      // use issue permalink has
+      var issueNo = window.location.hash.slice(1);
       if (vm.data.Issues.length > 0) {
-        loadIssue (vm.data.Issues.slice(-1).pop().No);
+        // or latest edition
+        if (issueNo == '') issueNo = vm.data.Issues.slice(-1).pop().No;
+        loadIssue (issueNo);
       }
   });
 

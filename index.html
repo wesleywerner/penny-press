@@ -88,13 +88,11 @@
           </tr>
         </tbody>
       </table>
-<!--
-      <ul>
-        <li v-for="issue in data.Issues">
-          <a href="#" v-on:click="loadIssue($index)">Issue #{{ issue.No }}, {{ issue.Date }} - {{ issue.Title }}</a>
-        </li>
-      </ul>
--->
+    </div>
+
+    <!-- error display -->
+    <div v-show="view == 'error'">
+      <p class="center">{{ errormessage }}</p>
     </div>
 
     <footer v-show="!printing">
