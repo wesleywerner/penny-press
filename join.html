@@ -156,7 +156,12 @@
           return this.input.length;
         },
         words: function () {
-          return this.input.split(' ').length;
+          // split by word boundaries
+          var re = /\b/;
+          var words = this.input.split(re);
+          // only longer words
+          words = words.filter(function(w) { return w.length > 2 });
+          return words.length;
         },
       }
     })
