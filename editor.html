@@ -1,0 +1,316 @@
+<!--
+   
+   Copyright 2016 wesley werner <wesley.werner@gmail.com>
+   
+   This program is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   any later version.
+   
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+   
+   You should have received a copy of the GNU General Public License
+   along with this program. If not, see http://www.gnu.org/licenses/.
+   
+-->
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+	<title>penny press</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+	<meta name="generator" content="Geany 1.24.1" />
+  <link rel="icon" type="image/png" href="images/favicon.png">
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/skeleton.css">
+  
+  <style>
+
+    .issue-table tbody tr {
+      cursor: pointer;
+    }
+
+    .issue-table tbody tr:hover {
+      background-color: lightgreen;
+    }
+
+    .floatbutton {
+      position: fixed;
+      left: 20px;
+      top: 20px;
+    }
+
+  </style>
+</head>
+
+<body>
+  
+  <div id="app">
+    
+    <!-- issue list -->
+    <div class="container" v-show="view == 'issuelist'">
+  
+      <h1>Penny Press Issue Editor</h1>
+      
+      <p>Warning: navigating away from this page loses changes. It does <strong>not</strong> save to disk either, you need to copy out your generated JSON.</p>
+
+      <table class="issue-table u-full-width">
+        <thead>
+          <tr>
+            <th>Issue</th>
+            <th>Date</th>
+            <th>Edition</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="issue in data.Issues">
+            <td v-on:click="loadIssue($index)">{{ issue.No }}</td>
+            <td v-on:click="loadIssue($index)">{{ issue.Date }}</td>
+            <td v-on:click="loadIssue($index)">{{ issue.Title }}</td>
+            <td><button type="button" v-on:click="removeIssue($index)">Remove</button></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <button type="button" v-on:click="addIssue()">Add Issue</button>
+
+    </div>
+
+    <button type="button" class="floatbutton" v-on:click="backWithoutPrompt()" v-show="view == 'issuedetails'">Back</button>
+
+    <!-- issue details -->
+    <div class="container" v-show="view == 'issuedetails'">
+
+      <form>
+        <h1>Issue Details</h1>
+        <div class="row">
+          <div class="two columns">
+            <label for="NoInput">No</label>
+            <input class="u-full-width" id="NoInput" type="number" v-model="issue.No">
+          </div>
+          <div class="four columns">
+            <label for="DateInput">Date</label>
+            <input class="u-full-width" id="DateInput" type="text" v-model="issue.Date">
+          </div>
+          <div class="six columns">
+            <label for="TitleInput">Title</label>
+            <input class="u-full-width" id="TitleInput" type="text" v-model="issue.Title">
+          </div>
+        </div>
+      </form>
+      
+      <form>
+        <h1>Articles</h1>
+        <div class="row" v-for="art in articles.Stories">
+          <div class="four columns">
+            <label>File</label>
+            <input class="u-full-width" type="text" v-model="art.File">
+          </div>
+          <div class="four columns">
+            <label>Type</label>
+            <select v-model="art.Type">
+              <option value="article">article</option>
+              <option value="advert">advert</option>
+            </select>
+          </div>
+          <div class="four columns">
+            <label>Remove</label>
+            <button type="button" v-on:click="removeArticle($index)">Remove</button>
+          </div>
+        </div>
+        <button type="button" v-on:click="addArticle()">Add Article</button>
+      </form>
+
+      <hr/>
+      
+      <p>This editor does <strong>not</strong> save the json for you, copy it out if you want to keep your changes.</p>
+      
+      <div class="row">
+        <div class="four columns">
+          <button v-on:click="testArticles()">
+            Test articles
+            <span v-show="failures.length > 0">(Failed)</span>
+            <span v-show="failures.length == 0">(OK)</span>
+            </button>
+          <ul>
+            <li v-for="fail in failures">{{ fail }}</li>
+          </ul>
+          <button type="button" class="button-primary" v-on:click="generateIssueJSON">Generate JSON</button>
+        </div>
+        
+        <div class="four columns">
+          <p><strong>ISSUE {{ issue.No }}</strong> JSON:</p>
+          <textarea id="issueJSONtext" class="u-full-width" v-model="issueJSON" onfocus="this.select()" onclick="this.focus();this.select()" readonly="readonly"></textarea>
+        </div>
+
+        <div class="four columns">
+          <p><strong>Catalog</strong> JSON:</p>
+          <textarea class="u-full-width" v-model="catalogJSON" onfocus="this.select()" onclick="this.focus();this.select()" readonly="readonly"></textarea>
+        </div>
+      </div>
+
+      <hr/>
+      
+    </div>
+    
+  </div>
+
+  <script src="js/marked.min.js"></script>
+  <script src="js/vue.min.js"></script>
+
+  <script>
+  
+  var defaultIssueObject = '{"No":"", "Title":"", "Date":""}';
+  var defaultArticleObject = '{"File":"", "Type":"article"}';
+  
+  var vm = new Vue({
+    el: '#app',
+    data: {
+      view: 'issuelist',
+      data: { },
+      errormessage: '',
+      issue: { },
+      articles: [ ],
+      failures: [ ],
+      issueJSON: '',
+      catalogJSON: ''
+    },
+    methods: {
+      loadIssue: function (id) {
+        loadIssue (vm.data.Issues[id].No);
+        vm.view = 'issuedetails';
+        vm.failures = [ ];
+        vm.issueJSON = '';
+        vm.catalogJSON = '';
+      },
+      addArticle: function () {
+        var newarticle = JSON.parse(defaultArticleObject);
+        this.articles.Stories.push(newarticle);
+      },
+      removeArticle: function (index) {
+        this.articles.Stories.splice(index, 1)
+      },
+      testArticles: function () {
+        testArticles();
+      },
+      generateIssueJSON: function () {
+        vm.issueJSON = JSON.stringify(vm.articles);
+        vm.catalogJSON = JSON.stringify(vm.data);
+        setTimeout(function(){
+          var el = document.getElementById('issueJSONtext');
+          el.focus();
+          el.select();
+        }, 250);
+      },
+      backWithPrompt: function () {
+        if (confirm('Back to issue list and lose uncopied JSON?')) {
+          vm.view = 'issuelist';
+        }
+      },
+      backWithoutPrompt: function () {
+        vm.view = 'issuelist';
+      },
+      addIssue: function () {
+        var next = 0;
+        for (var i=0; i<vm.data.Issues.length; i++) {
+          var no = parseInt(vm.data.Issues[i].No);
+          if (no > next) {
+            next = no;
+          }
+        }
+        next++;
+        var newissue = JSON.parse(defaultIssueObject);
+        newissue.No = next;
+        vm.data.Issues.push(newissue);
+      },
+      removeIssue: function (index) {
+        vm.data.Issues.splice(index, 1);
+      }
+    },
+    filters: {
+      marked: marked
+    }
+  });
+
+  function fetchFile(path, callback, failcallback) {
+    var httpRequest = new XMLHttpRequest();
+    httpRequest.onreadystatechange = function() {
+      if (httpRequest.readyState === 4) {
+        if (httpRequest.status === 200) {
+          if (callback) callback(httpRequest.responseText);
+        }
+        else {
+          // something went wrong
+          if (failcallback) failcallback(httpRequest.statusText +': '+ httpRequest.responseURL);
+        }
+      }
+    };
+    httpRequest.open('GET', path);
+    httpRequest.send(); 
+  }
+
+  function loadIssue (No) {
+    
+    // find the requested issue in the catalog
+    vm.issue = vm.data.Issues.find(function (item) {
+      return item.No == No;
+      });
+      
+    if (vm.issue) {
+      
+      // ask for the issue article content list
+      var issuepath = 'issues/'+ vm.issue.No +'/';
+      fetchFile(issuepath +'content.json',
+        function (data){
+          vm.articles = JSON.parse(data);
+        },
+        function (error) {
+          // new issues that don't have article data yet
+          vm.articles = { Stories: [] };
+        }
+        );
+    }
+    else {
+      // that issue is not in our list
+      console.warn('Issue no '+ No +' does not exist.')
+    }
+    
+  }
+
+  // load catalog of issues
+  fetchFile('issues/catalog.json', function(data){
+    vm.data = JSON.parse(data);
+  });
+
+  function testArticles () {
+    var issuepath = 'issues/'+ vm.issue.No +'/';
+    vm.failures = [ ];
+    vm.articles.Stories.forEach(function (storydata) {
+      if (storydata.File == '') {
+        vm.failures.push('article file is empty');
+      }
+      fetchFile(issuepath + storydata.File, null, function(data){
+        // failure callback
+        vm.failures.push(data);
+      });
+    });
+  }
+  
+  window.vm = vm;
+
+  window.onbeforeunload = function() {
+    return "Are you sure you want to navigate away?";
+  }
+  
+  </script>
+
+</body>
+
+</html>
