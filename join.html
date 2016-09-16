@@ -33,36 +33,21 @@
   
   <style>
 
-    #editor {
-      margin: 0;
-      height: 100%;
-      color: #333;
-    }
-
-    textarea, #editor div {
-      display: inline-block;
-      width: 49%;
-      height: 100%;
-      vertical-align: top;
+    textarea {
       -webkit-box-sizing: border-box;
       -moz-box-sizing: border-box;
       box-sizing: border-box;
       padding: 0 20px;
+      height: 400px;
     }
 
     textarea {
       border: 2px solid gray;
-      resize: none;
-      outline: none;
-      background-color: #f6f6f6;
       font-size: 14px;
       font-family: 'Monaco', courier, monospace;
       padding: 20px;
     }
 
-    code {
-      color: #f66;
-    }
   </style>
 </head>
 
@@ -82,8 +67,14 @@
       <div class="twelve columns">So you want to write some articles?</div>
     </div>
     
-    <p>Glad to hear it.</p>
-
+    <h1>Steps</h1>
+    <ul>
+      <li>Articles are written in <a href="http://daringfireball.net/projects/markdown/basics">markdown format</a>.</li>
+      <li>You can use our handy editor below to preview your article and get a word count</li>
+      <li>Follow the tips and guidelines below</li>
+      <li><a href="https://docs.google.com/forms/d/e/1FAIpQLSc3KMjMZHlMaqONaG_bXuNSVsIokZTifyULb1xRQhmCKr3h_w/viewform">Submit your article here</a></li>
+    </ul>
+    
     <h1>Tips for writing articles</h1>
     <ul>
       <li>Write fun, entertaining or insightful words</li>
@@ -93,21 +84,21 @@
     </ul>
     
     <h1>Format</h1>
-    <p>Penny Press is palindrome of paraphernalia, mimicking old media within the new. We don't really want url's and links in our articles. The exception to this rule is placing adverts, which may have one link, if any.</p>
+    <p>Penny Press is a palindrome of paraphernalia, mimicking old media within the new. We don't really want url's and links in our articles. The exception to this rule is placing adverts, which may have one link, if any.</p>
     <p>Images are displayed grayscale to match our print. Don't worry doing this yourself, our CSS does it for you.</p>
     
     <h1>Articles</h1>
     <p></p>
     <ul>
-      <li>One article per person, per issue please</li>
       <li>You can include one image in your article if you wish</li>
+      <li>Images will be saved on to the Penny Press site on publish</li>
       <li>No hard limit on the number of words.</li>
     </ul>
     
     <h1>Adverts</h1>
     <p>Penny Press does not print ads to monetize, they are purely informational, entertaining or made up. They exist to give readers the full press experience.</p>
     <ul>
-      <li>Adverts can contain one web url, if necessary</li>
+      <li>Adverts can contain one web URL, if necessary</li>
       <li>They can have up to one image</li>
       <li>25 words limit</li>
       <li>You need one advert credit to print your ad</li>
@@ -126,8 +117,14 @@
         <div class="two columns">words: {{ words }}</div>
       </div>
       <div id="editor">
-        <textarea v-model="input" debounce="300"></textarea>
-        <div v-html="input | marked"></div>
+        <div class="row">
+          <div class="six columns">
+            <textarea class="u-full-width" v-model="input" debounce="300"></textarea>
+          </div>
+          <div class="six columns">
+            <div v-html="input | marked"></div>
+          </div>
+        </div>
       </div>
     </div>
     
@@ -146,7 +143,7 @@
     new Vue({
       el: '#editor-app',
       data: {
-        input: '# my article'
+        input: '# headline\n _by your name_\n \n Interesting story words live here.\n\n Penny Press is a palindrome of paraphernalia, mimicking old media within the new.\n \n ![](http://placekitten.com/200/150)\n \n > the kitten climbed and climbed, and finally it ran out of tree!'
       },
       filters: {
         marked: marked
