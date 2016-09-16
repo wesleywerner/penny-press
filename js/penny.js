@@ -67,8 +67,8 @@
         var content = JSON.parse(data);
         
         // print each article
-        content.stories.forEach(function (storydata) {
-          var storytext = fetchFile(issuepath + storydata.file, function(data){
+        content.Stories.forEach(function (storydata) {
+          var storytext = fetchFile(issuepath + storydata.File, function(data){
             storydata.content = data
             vm.content.push(storydata);
           });

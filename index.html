@@ -61,7 +61,7 @@
     <!-- issue content -->
     <div class="newspaper-layout" v-show="!printing && view == 'read'">
       <div v-for="story in content">
-        <div v-html="story.content | marked" v-bind:class="[ story.type ]"></div>
+        <div v-html="story.content | marked" v-bind:class="[ story.Type ]"></div>
       </div>
     </div>
     

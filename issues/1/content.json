@@ -1,16 +1,16 @@
 {
-  "stories": [
+  "Stories": [
     {
-      "type": "article",
-      "file": "penny-press-founded.md"
+      "Type": "article",
+      "File": "penny-press-founded.md"
     },
     {
-      "type": "article",
-      "file": "venusian-pups-invade.md"
+      "Type": "article",
+      "File": "venusian-pups-invade.md"
     },
     {
-      "type": "advert",
-      "file": "writers-wanted.md"
+      "Type": "advert",
+      "File": "writers-wanted.md"
     }
   ]
 }
