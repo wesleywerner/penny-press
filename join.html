@@ -120,6 +120,7 @@
         <div class="row">
           <div class="six columns">
             <textarea class="u-full-width" v-model="input" debounce="300"></textarea>
+            <div title="We save your words in your local browser storage, so you won't lose them if you close or refresh this page.">{{ saved }}</div>
           </div>
           <div class="six columns">
             <div v-html="input | marked"></div>
@@ -138,11 +139,13 @@
 
   <script src="js/marked.min.js"></script>
   <script src="js/vue.min.js"></script>
+  <script src="js/localforage.min.js"></script>
   
   <script>
-    new Vue({
+    var vm = new Vue({
       el: '#editor-app',
       data: {
+        saved: '',
         input: '# headline\n _by your name_\n \n Interesting story words live here.\n\n Penny Press is a palindrome of paraphernalia, mimicking old media within the new.\n \n ![](http://placekitten.com/200/150)\n \n > the kitten climbed and climbed, and finally it ran out of tree!'
       },
       filters: {
@@ -162,6 +165,29 @@
         },
       }
     })
+
+    // reload any saved article wording
+    localforage.getItem('saved_article', function (err, value) {
+      // if err is non-null, we got an error. otherwise, value is the value 
+      if (err == null && value != '') {
+        vm.input = value;
+      }
+    });
+    
+    // auto save word counter input
+    window.setInterval( 
+      function() {
+        localforage.setItem('saved_article', vm.input, function (err) {
+          // if err is non-null, we got an error. otherwise, value is the value 
+          if (err == null) {
+            vm.saved = 'Saved at ' + new Date().toLocaleFormat('%T');
+          }
+          else {
+            vm.saved = err;
+          }
+        });
+      }, 42 * 1000);
+  
   </script>
 
 </body>
