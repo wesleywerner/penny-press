@@ -30,25 +30,6 @@
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/skeleton.css">
   <link rel="stylesheet" href="css/penny.css">
-  
-  <style>
-
-    textarea {
-      -webkit-box-sizing: border-box;
-      -moz-box-sizing: border-box;
-      box-sizing: border-box;
-      padding: 0 20px;
-      height: 400px;
-    }
-
-    textarea {
-      border: 2px solid gray;
-      font-size: 14px;
-      font-family: 'Monaco', courier, monospace;
-      padding: 20px;
-    }
-
-  </style>
 </head>
 
 <body>
@@ -106,28 +87,7 @@
     
     <h1>Disclaimer</h1>
     <p>The editor-in-chief reserves the right to deny articles that they think are inflammatory, discriminatory or in bad taste. Of course you <em>will</em> get a chance to fix your article. We really want your words, we just don't want trolls :)</p>
-    
-    <hr/>
-    
-    <h1>Article editor <small>and word counter</small></h1>
-    <div id="editor-app">
-      <div class="row">
-        <div class="two columns">letters: {{ letters }}</div>
-        <div class="two columns">words: {{ words }}</div>
-      </div>
-      <div id="editor">
-        <div class="row">
-          <div class="six columns">
-            <textarea class="u-full-width" v-model="input" debounce="300"></textarea>
-            <div title="We save your words in your local browser storage, so you won't lose them if you close or refresh this page.">{{ saved }}</div>
-          </div>
-          <div class="six columns">
-            <div v-html="input | marked"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    
+
     <footer>
       <div class="row">
         <div class="column">Penny Press Newspaper Co</div>
@@ -135,59 +95,6 @@
     </footer>
 
   </div>
-
-  <script src="js/marked.min.js"></script>
-  <script src="js/vue.min.js"></script>
-  <script src="js/localforage.min.js"></script>
-  
-  <script>
-    var vm = new Vue({
-      el: '#editor-app',
-      data: {
-        saved: '',
-        input: '# headline\n _by your name_\n \n Interesting story words live here.\n\n Penny Press is a palindrome of paraphernalia, mimicking old media within the new.\n \n ![](http://placekitten.com/200/150)\n \n > the kitten climbed and climbed, and finally it ran out of tree!'
-      },
-      filters: {
-        marked: marked
-      },
-      computed: {
-        letters: function () {
-          return this.input.length;
-        },
-        words: function () {
-          // split by word boundaries
-          var re = /\b/;
-          var words = this.input.split(re);
-          // only longer words
-          words = words.filter(function(w) { return w.length > 2 });
-          return words.length;
-        },
-      }
-    })
-
-    // reload any saved article wording
-    localforage.getItem('saved_article', function (err, value) {
-      // if err is non-null, we got an error. otherwise, value is the value 
-      if (err == null && value != '') {
-        vm.input = value;
-      }
-    });
-    
-    // auto save word counter input
-    window.setInterval( 
-      function() {
-        localforage.setItem('saved_article', vm.input, function (err) {
-          // if err is non-null, we got an error. otherwise, value is the value 
-          if (err == null) {
-            vm.saved = 'Saved at ' + new Date().toLocaleFormat('%T');
-          }
-          else {
-            vm.saved = err;
-          }
-        });
-      }, 42 * 1000);
-  
-  </script>
 
 </body>
 
