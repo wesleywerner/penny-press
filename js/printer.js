@@ -34,8 +34,8 @@
         testArticles();
       },
       generateIssueJSON: function () {
-        vm.issueJSON = JSON.stringify(vm.articles);
-        vm.catalogJSON = JSON.stringify(vm.data);
+        vm.issueJSON = JSON.stringify(vm.articles,null,2);
+        vm.catalogJSON = JSON.stringify(vm.data,null,2);
         setTimeout(function(){
           var el = document.getElementById('issueJSONtext');
           el.focus();
