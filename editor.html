@@ -1,0 +1,75 @@
+<!--
+   
+   Copyright 2016 wesley werner <wesley.werner@gmail.com>
+   
+   This program is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   any later version.
+   
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+   
+   You should have received a copy of the GNU General Public License
+   along with this program. If not, see http://www.gnu.org/licenses/.
+   
+-->
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+	<title>penny press</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+	<meta name="generator" content="Geany 1.24.1" />
+  <link rel="icon" type="image/png" href="images/favicon.png">
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/skeleton.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+</head>
+
+<body>
+
+  <div id="penny-app" class="container">
+    <h1>Article editor <small>and word counter</small></h1>
+    <textarea class="u-full-width"></textarea>
+  
+    <footer>
+      Editor code by <a target="_blank" href="https://simplemde.com/">SimpleMDE</a>.
+    </footer>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+
+  <script>
+
+    var simplemde = new SimpleMDE({
+      autofocus: true,
+      autosave: {
+          enabled: true,
+          uniqueId: "PennyPressArticleEditor",
+          delay: 42 * 1000,
+      }
+    });
+    
+    if (simplemde.value() == '') {
+      simplemde.value('# headline\n _by your name_\n \n Interesting story words live here.\n\n Penny Press is a palindrome of paraphernalia, mimicking old media within the new.\n \n ![](http://placekitten.com/200/150)\n \n > the kitten climbed and climbed, and finally it ran out of tree!');
+    }
+
+    //words: function () {
+      //// split by word boundaries
+      //var re = /\b/;
+      //var words = this.input.split(re);
+      //// only longer words
+      //words = words.filter(function(w) { return w.length > 2 });
+      //return words.length;
+
+  </script>
+
+</body>
+
+</html>
