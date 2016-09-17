@@ -11,6 +11,10 @@
     {
       "Type": "advert",
       "File": "writers-wanted.md"
+    },
+    {
+      "File": "rain-turns-gardens-into-pools.md",
+      "Type": "article"
     }
   ]
 }
