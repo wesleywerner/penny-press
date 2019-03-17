@@ -15,3 +15,13 @@ It is also a static site with no database backend. Articles are markdown (.md) f
     │   │   └── article2.md
     └── README.md
 
+## Testing
+
+Use docker with a temporary nginx static server, your pages are served on http://localhost:8080
+
+
+    sudo docker run --rm -p 8080:80 -v /:/usr/share/nginx/html nginx:stable-alpine
+
+## Screenshot
+
+![penny press screenshot](images/screenshot.png)
